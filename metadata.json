@@ -1,0 +1,5 @@
+{
+  "name": "矩阵认知实验室",
+  "description": "An intuitive, semantic linear algebra exploration platform that visualizes matrices as spatial transformation instructions.",
+  "requestFramePermissions": []
+}
