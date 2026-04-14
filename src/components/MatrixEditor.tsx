@@ -7,9 +7,10 @@ import { RotateCcw, Maximize, Move, Scissors, RefreshCw, Grid2X2, Grid3X3, Alert
 interface MatrixEditorProps {
   matrix: MatrixData;
   onChange: (matrix: MatrixData) => void;
+  lockedDimension?: 2 | 3;
 }
 
-export const MatrixEditor: React.FC<MatrixEditorProps> = ({ matrix, onChange }) => {
+export const MatrixEditor: React.FC<MatrixEditorProps> = ({ matrix, onChange, lockedDimension }) => {
   const dimension = matrix.length;
   const baseId = useId();
   const [localValues, setLocalValues] = useState<string[][]>(matrix.map(row => row.map(v => v.toString())));
@@ -48,6 +49,7 @@ export const MatrixEditor: React.FC<MatrixEditorProps> = ({ matrix, onChange }) 
   };
 
   const setDimension = (dim: number) => {
+    if (lockedDimension) return;
     if (dim === 2) onChange(identity2D);
     else onChange(identity3D);
   };
@@ -71,29 +73,31 @@ export const MatrixEditor: React.FC<MatrixEditorProps> = ({ matrix, onChange }) 
 
   return (
     <div className="flex flex-col gap-6 p-6 bg-white rounded-xl border border-slate-200 shadow-sm">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">矩阵阶数</h3>
-        <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
-          <Button
-            variant={dimension === 2 ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => setDimension(2)}
-            className="h-8 px-3 gap-2 text-xs"
-          >
-            <Grid2X2 className="w-3 h-3" />
-            2x2
-          </Button>
-          <Button
-            variant={dimension === 3 ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => setDimension(3)}
-            className="h-8 px-3 gap-2 text-xs"
-          >
-            <Grid3X3 className="w-3 h-3" />
-            3x3
-          </Button>
+      {!lockedDimension && (
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">矩阵阶数</h3>
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
+            <Button
+              variant={dimension === 2 ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setDimension(2)}
+              className="h-8 px-3 gap-2 text-xs"
+            >
+              <Grid2X2 className="w-3 h-3" />
+              2x2
+            </Button>
+            <Button
+              variant={dimension === 3 ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setDimension(3)}
+              className="h-8 px-3 gap-2 text-xs"
+            >
+              <Grid3X3 className="w-3 h-3" />
+              3x3
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">

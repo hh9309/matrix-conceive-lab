@@ -359,8 +359,10 @@ export const LabLayout: React.FC = () => {
                         <Slider 
                           value={[animProgress * 100]} 
                           onValueChange={(val) => {
-                            if (val && val.length > 0) {
+                            if (Array.isArray(val) && val.length > 0) {
                               setAnimProgress(val[0] / 100);
+                            } else if (typeof val === 'number') {
+                              setAnimProgress(val / 100);
                             }
                           }}
                           min={0}
@@ -856,7 +858,7 @@ export const LabLayout: React.FC = () => {
                               重置恒等
                             </Button>
                           </div>
-                          <MatrixEditor key="editor-color" matrix={colorMatrix} onChange={setColorMatrix} />
+                          <MatrixEditor key="editor-color" matrix={colorMatrix} onChange={setColorMatrix} lockedDimension={3} />
                         </div>
 
                         <Card className="bg-white border-slate-200 shadow-sm">
@@ -979,6 +981,7 @@ export const LabLayout: React.FC = () => {
                                 // Ensure columns sum to 1 for a stochastic matrix
                                 setMarkovMatrix(m);
                               }} 
+                              lockedDimension={3}
                             />
                             <div className="p-3 bg-amber-50 rounded-lg border border-amber-100 text-[10px] text-amber-700 leading-relaxed">
                               <b>注意：</b> 这是一个随机矩阵。每一列代表从当前状态转移到其他状态的概率，列之和应为 1。
@@ -1112,7 +1115,7 @@ export const LabLayout: React.FC = () => {
                       <div className="lg:col-span-4 space-y-6">
                         <div className="space-y-4">
                           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">加密密钥矩阵 (2x2)</h4>
-                          <MatrixEditor key="editor-hill" matrix={hillKey} onChange={setHillKey} />
+                          <MatrixEditor key="editor-hill" matrix={hillKey} onChange={setHillKey} lockedDimension={2} />
                           <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-100 text-[10px] text-indigo-600 leading-relaxed">
                             <b>提示：</b> 希尔密码要求矩阵在模 26 下可逆。如果无法解密，请尝试更换矩阵数值。
                           </div>
